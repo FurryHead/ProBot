@@ -1,0 +1,2 @@
+Lua	A dynamic scripting lanuage, available from http://lua.org/ --- Lua is also what I am written in! :)
+comchar	The character preceding a bot command. For example, in the command !help, ! is the comchar.

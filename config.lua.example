@@ -1,0 +1,51 @@
+-- Configuration file for my lua bot
+
+-- The IRC server to connect to
+IRC_HOST = "irc.freenode.net"
+
+-- The port on which to connect to the IRC server
+IRC_PORT = 6667
+
+-- The nickname & ident to use
+nickname = "ProBot"
+ident = "ProBot"
+
+-- If you use NickServ, set these two options to your values instead of nil
+LoginName = nil
+LoginPass = nil
+
+-- The channels to join once logged in
+start_channels = { "#botters-test" }
+
+-- The prefix for all commands
+cmdPrefix = "+"
+
+-- The bot owner
+owner = "FurryHead"
+
+-- If you want to have timestamps, set this to true 
+timestamp = true
+
+-- If timestamp is true, this is the time format to use (strftime() compatible)
+pfmt = "%I:%M:%S %p"
+
+start_plugins = {
+    "auth",
+    "xml",
+    "plugin_tools",
+    "channels",
+    "nick",
+    "info",
+    "wikipedia",
+    "ping",
+    "die",
+    "mode",
+    "search",
+    "logger",
+    "output",
+    "smack",
+}
+
+-- Just a little snag to make sure you read the whole config file :)
+-- just set this to true and the error will dissapear.
+configured = false

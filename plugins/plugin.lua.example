@@ -1,0 +1,88 @@
+commands = { "ping" }
+
+function startup()
+    --[[
+    Here you would put initialization code. 
+    For example, a logging plugin would initialize a variable
+    defined in the global scope (to this plugin) with io.open()
+    so that the rest of the plugin can use that file handle for logging.
+    ]]
+end
+
+function cleanup()
+    --[[
+    Here, you would put cleanup code.
+    For example, assuming the logging plugin as mentioned
+    in the startup() comments, you would close the file handle 
+    (and any other resourced you opened).
+    ]]
+end
+
+function handle_triggers(channel, user, cmd, args)
+    --[[ 
+    This is the function for handling commands.
+    As you can see, I provided an example command.
+    You must define at least one command in the global 
+    variable "commands" for this to be called.
+    If you define multiple commands, this function
+    will be called to handle all of them.
+    ]]
+    if cmd == "ping" then
+        if #args < 1 then
+            doMessage(channel, user..": Pong: "..args[1])
+        else
+            doMessage(channel, user..": Pong")
+        end
+    end
+end
+
+function handle_message(channel, user, message) 
+    --[[
+    This is the function that will be called when we get a message.
+    It can be a public (on a channel) or a private message.
+    ]]
+end
+
+function handle_mode(channel, user, mode, otheruser)
+    --[[
+    This is the function that will be called when we see someone 
+    set a mode. 
+    
+    otheruser will be nil if the mode was set on the channel, 
+    otherwise it will contain the nickname of the user that 
+    the mode was set onto.
+    ]]
+end
+
+function handle_action(channel, user, action)
+    --[[
+    This is the function that will be called when 
+    someone does an action.
+    ]]
+end
+
+function handle_quit(user, message)
+    --[[
+    This is  the function that will be called when
+    someone quits IRC. 
+    (see handle_part for when someone leaves/parts a channel)
+    ]]
+end
+
+function handle_join(channel, user)
+    --[[
+    This will be called when someone joins a channel we're in.
+    ]]
+end
+
+function handle_part(channel, user, message)
+    --[[
+    This will be called when someone parts a channel we're in.
+    ]]
+end
+
+function handle_nick(oldnick, newnick)
+    --[[
+    This will be called when someone changes their nickname.
+    ]]
+end
