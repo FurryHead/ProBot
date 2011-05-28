@@ -32,6 +32,7 @@ function handle_action(channel, user, action)
 end
 
 function handle_quit(user, message)
+    local person
     if user == nick then
         person = "I have"
     else
@@ -41,6 +42,7 @@ function handle_quit(user, message)
 end
 
 function handle_join(channel, user)
+    local person
     if user == nick then 
         person = "I have"
     else
@@ -50,6 +52,7 @@ function handle_join(channel, user)
 end
 
 function handle_part(channel, user, message)
+    local person
     if user == nick then 
         person = "I have"
     else
@@ -59,6 +62,7 @@ function handle_part(channel, user, message)
 end
 
 function handle_nick(oldnick, newnick)
+    local person
     if oldnick == nick then 
         person = "I am"
     else

@@ -1,12 +1,13 @@
 commands = { "lastlog" }
 
-logfh = nil
-logfmt = pfmt
-start_or_stop_fmt = "%m/%d/%y %I:%M:%S %p"
-logfile = "./plugins/logs/"..IRC_HOST..".log"
-backlog = { }
+local logfh = nil
+local logfmt = pfmt
+local start_or_stop_fmt = "%m/%d/%y %I:%M:%S %p"
+local logfile = "./plugins/logs/"..IRC_HOST..".log"
+local backlog = { }
 
 function startup()
+    local err
     logfh,err = io.open(logfile, "a")
     if err == (logfile..": No such file or directory") then
         error("Missing logfile directory. Please make a new folder named \"logs\" in the plugins folder, and try again.")
@@ -26,7 +27,7 @@ function log(msg)
     logfh:write(msg.."\n")
 end
 
-function add_to_backlog(channel, msg)
+local function add_to_backlog(channel, msg)
     if not backlog[channel] then backlog[channel] = {} end
     if logfmt then
         msg = "["..os.date(logfmt).."] "..msg
@@ -38,31 +39,31 @@ function add_to_backlog(channel, msg)
 end
 
 function handle_message(channel, user, message) 
-    msg = string.format("<%s> %s: %s", channel, user, message)
+    local msg = string.format("<%s> %s: %s", channel, user, message)
     
     add_to_backlog(channel, msg)
     log(msg)
 end
 
 function hande_mode(channel, user, mode, otheruser)
+    local msg
     if otheruser then -- The mode was set onto a user
         msg = string.format("<%s> %s sets mode %s on %s", channel, user, mode, otheruser)
-        add_to_backlog(channel, msg)
-        log(msg)
     else -- Then the mode was set on the channel
         msg = string.format("<%s> %s sets mode %s", channel, user, mode)
-        add_to_backlog(channel, msg)
-        log(msg)
     end
+    add_to_backlog(channel, msg)
+    log(msg)
 end
 
 function handle_action(channel, user, action)
-    msg = string.format("<%s> * %s %s", channel, user, action)
+    local msg = string.format("<%s> * %s %s", channel, user, action)
     add_to_backlog(channel, msg)
     log(msg)
 end
 
 function handle_quit(user, message)
+    local person
     if user == nick then
         person = "I have"
     else
@@ -75,6 +76,7 @@ function handle_quit(user, message)
 end
 
 function handle_join(channel, user)
+    local person
     if user == nick then 
         person = "I have"
     else
@@ -85,6 +87,7 @@ function handle_join(channel, user)
 end
 
 function handle_part(channel, user, message)
+    local person
     if user == nick then 
         person = "I have"
     else
@@ -95,6 +98,7 @@ function handle_part(channel, user, message)
 end
 
 function handle_nick(oldnick, newnick)
+    local person
     if oldnick == nick then 
         person = "I am"
     else
@@ -106,32 +110,32 @@ end
 
 function handle_triggers(channel, user, cmd, args)
     if cmd == "lastlog" then
-        found = {}
+        local found = {}
         if #args < 1 then 
             doMessage(channel, user..": Not enough arguments.")
             return
         end
         for i,v in ipairs(backlog[channel]) do
-            temp = string.join(" ", args)
+            local temp = string.join(" ", args)
+            local m
             if logfmt then
-                ch = channel:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
-                t = temp:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
+                local ch = channel:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
+                local t = temp:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
                 m = string.format("^%%[.+%%] <%s> .+: [^%%%s]*.*%s.*", ch, cmdPrefix, t:lower())
             else
-                ch = channel:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
-                t = temp:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
+                local ch = channel:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
+                local t = temp:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1')
                 m = string.format("^<%s> .+: [^%%%s]*.*%s.*", ch, cmdPrefix, t:lower())
             end
             if v:lower():match(m) then
                 table.insert(found, #found+1, v)
             end
         end
-        g = msg
-        if logfmt then g = "["..os.date(logfmt).."] "..g end
+        local text = string.format("<%s> %s: +%s %s", channel, user, cmd, string.join(" ", args))
+        if logfmt then text = "["..os.date(logfmt).."] "..text end
         if #found > 0 then
             for i,v in ipairs(found) do
-                print(v)
-                if v ~= g then
+                if v ~= text then
                     doMessage(channel, user..": "..v)
                 end
             end

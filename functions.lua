@@ -40,7 +40,7 @@ function loadplugin(name, _)
     if loadedplugin(name) then return end
     if not pluginexists(name) then return "No such plugin." end
     if not _ then 
-        pname = ""
+        local pname = ""
         for k,v in pairs(plugins) do 
             if v == getfenv(2) then
                 pname = k
@@ -50,7 +50,7 @@ function loadplugin(name, _)
         print("Plugin "..pname.." is loading plugin "..name..".")
     end
     
-    local plugin_env   = setmetatable({}, { __index = getfenv(0), __metatable = {} })
+    local plugin_env = setmetatable({}, { __index = getfenv(0), __metatable = {} })
     local plugin_chunk,err = loadfile("./plugins/" .. name .. '.lua')
     if err then 
         print("Error loading plugin "..name.." - "..err)
@@ -58,7 +58,7 @@ function loadplugin(name, _)
     end
        
     setfenv(plugin_chunk, plugin_env)
-    a,err = pcall(plugin_chunk)
+    local a,err = pcall(plugin_chunk)
     if not a then 
         print("Error loading plugin "..name.." - "..err)
         return err
@@ -67,7 +67,7 @@ function loadplugin(name, _)
     plugins[name] = plugin_env
     
     if plugin_env.startup then 
-        a,err = pcall(plugin_env.startup) 
+        local a,err = pcall(plugin_env.startup) 
         if not a then
             print("Error starting up plugin "..name.." - "..err)
             plugins[name] = nil
@@ -89,7 +89,7 @@ end
 function closeplugin(name, _)
     if not loadedplugin(name) then return end
     if not _ then
-        pname = ""
+        local pname = ""
         for k,v in pairs(plugins) do 
             if v == getfenv(2) then
                 pname = k
@@ -98,7 +98,7 @@ function closeplugin(name, _)
         print("Plugin "..pname.." is closing plugin "..name..".")
     end
     
-    ln = plugins[name]
+    local ln = plugins[name]
     if not ln then return end
     
     for k,v in pairs(plugins[name]) do
@@ -112,7 +112,7 @@ function closeplugin(name, _)
     end
     
     if plugins[name].cleanup then 
-        a,err = pcall(plugins[name].cleanup) 
+        local a,err = pcall(plugins[name].cleanup) 
         if not a then
             print("Error cleaning up plugin "..name.." - "..err)
             plugins[name] = nil
@@ -123,7 +123,7 @@ function closeplugin(name, _)
 end
 
 function loadplugins() 
-    errs = ""
+    local errs = ""
     for _,name in ipairs(start_plugins) do
         err = loadplugin(name, true)
         if err then 
@@ -135,7 +135,7 @@ function loadplugins()
 end
 
 function closeplugins()
-    errs = ""
+    local errs = ""
     for name,value in pairs(plugins) do
         for k,v in pairs(value) do
             if k:match("^handle_") then
@@ -147,7 +147,7 @@ function closeplugins()
             end
         end
         if value.cleanup then 
-            a,err = pcall(value.cleanup) 
+            local a,err = pcall(value.cleanup) 
             if not a then
                 print("Error cleaning up plugin "..name.." - "..err)
                 errs = errs..err.." ---------- "

@@ -12,7 +12,7 @@ function handle_triggers(channel, user, cmd, args)
                         doMessage(channel, user..": Not enough arguments.")
                         return
                     else
-                        msg = ""
+                        local msg = ""
                         for i,v in pairs(args) do
                             if i ~= 1 then
                                 msg = msg .. v .. " "
@@ -21,7 +21,7 @@ function handle_triggers(channel, user, cmd, args)
                         doMessage(args[1], msg)
                     end
                 else
-                    msg = ""
+                    local msg = ""
                         for i,v in pairs(args) do
                             msg = msg .. v .. " "
                         end

@@ -1,6 +1,6 @@
-socket = require("socket")
-socket.url = require("socket.url")
-socket.http = require("socket.http")
+require("socket")
+require("socket.url")
+require("socket.http")
 
 dofile("config.lua")
 dofile("functions.lua")
@@ -11,9 +11,9 @@ if not configured then
     error("You have not fully read the bot configuration file. (config.lua) Please read the file FULLY, then try starting the bot again.")
 end
 
-running = true
+local running = true
 
-IRC_ACTIONS = {
+local IRC_ACTIONS = {
     join = { },
     part = { },
     quit = { },
@@ -25,13 +25,13 @@ IRC_ACTIONS = {
     triggers = { },
 }
 
-plugins = {}
+local plugins = {}
 
 package.path = package.path..";./plugins/?.lua"
 loadplugins()
 
 -- Create a socket, and connect
-conn = assert(socket.tcp(), "Could not make a TCP socket.")
+local conn = assert(socket.tcp(), "Could not make a TCP socket.")
 assert(conn:connect(IRC_HOST, IRC_PORT), "Failed to connect.")
 
 -- Register with the IRC server
@@ -42,7 +42,7 @@ conn:settimeout(60)
 
 function main()
     while running do
-        data, err = conn:receive()
+        local data, err = conn:receive()
         if err == "timeout" then
             err = nil
             sendLine("PING back")
@@ -51,7 +51,7 @@ function main()
         end
         if err then error(err) end
         --print(data)
-        words = data:split(" ")
+        local words = data:split(" ")
         
         if words[1] == "PING" then
             -- The server pinged us, we need to pong or we'll be disconnected
@@ -60,7 +60,7 @@ function main()
         end
         
         -- Takes the ':Nick!Ident@Host' chunk and assigns Nick to user
-        user = words[1]:split(":")[1]:split("!")[1]
+        local user = words[1]:split(":")[1]:split("!")[1]
         
         if words[2] == "376" then
             -- We successfully logged in, do post-login procedures
@@ -75,8 +75,8 @@ function main()
         
         if words[2] == "PRIVMSG" then
             -- We got a message
-            channel = words[3]
-            message = data:sub(data:find(":", data:find(channel:sub(channel:find("-") or 1)))+1)
+            local channel = words[3]
+            local message = data:sub(data:find(":", data:find(channel:sub(channel:find("-") or 1)))+1)
             if message:find("\01ACTION") then
                 -- String was found, it's an action
                 sawAction(channel, user, message:sub(9, -2))
@@ -113,7 +113,6 @@ function main()
         
         if words[2] == "NICK" then
             -- Someone changed their nickname
-            print(data)
             sawNick(user, words[3]:sub(1))
         end
         

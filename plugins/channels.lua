@@ -10,14 +10,10 @@ function handle_triggers(channel, user, cmd, args)
             doMessage(channel, user..": Not enough arguments.")
             return
         end
-        actions = {
-            ["join"] = function()
-                doJoin(args[1])
-            end,
-            ["part"] = function()
-                doPart(args[1])
-            end
-        }
-        if actions[cmd] then actions[cmd]() end
+        if cmd == "join" then
+            doJoin(args[1])
+        elseif cmd == "part" then
+            doPart(args[1])
+        end
     end
 end
