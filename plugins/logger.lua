@@ -28,6 +28,9 @@ end
 
 function add_to_backlog(channel, msg)
     if not backlog[channel] then backlog[channel] = {} end
+    if logfmt then
+        msg = "["..os.date(logfmt).."] "..msg
+    end
     table.insert(backlog[channel], #(backlog[channel])+1, msg)
     if #(backlog[channel]) > 100 then
         table.remove(backlog[channel], 1)
@@ -35,24 +38,28 @@ function add_to_backlog(channel, msg)
 end
 
 function handle_message(channel, user, message) 
-    if not message:match("^[^%"..cmdPrefix.."].+$") then return end
-     
     msg = string.format("<%s> %s: %s", channel, user, message)
-    log(msg)
     
     add_to_backlog(channel, msg)
+    log(msg)
 end
 
 function hande_mode(channel, user, mode, otheruser)
     if otheruser then -- The mode was set onto a user
-        printd(string.format("<%s> %s sets mode %s on %s", channel, user, mode, otheruser))
+        msg = string.format("<%s> %s sets mode %s on %s", channel, user, mode, otheruser)
+        add_to_backlog(channel, msg)
+        log(msg)
     else -- Then the mode was set on the channel
-        printd(string.format("<%s> %s sets mode %s", channel, user, mode))
+        msg = string.format("<%s> %s sets mode %s", channel, user, mode)
+        add_to_backlog(channel, msg)
+        log(msg)
     end
 end
 
 function handle_action(channel, user, action)
-    printd(string.format("<%s> * %s %s", channel, user, action))
+    msg = string.format("<%s> * %s %s", channel, user, action)
+    add_to_backlog(channel, msg)
+    log(msg)
 end
 
 function handle_quit(user, message)
@@ -97,7 +104,7 @@ function handle_nick(oldnick, newnick)
     log(string.format("%s now known as %s", person, newnick))
 end
 
-function handle_trigger(channel, user, cmd, args)
+function handle_triggers(channel, user, cmd, args)
     if cmd == "lastlog" then
         found = {}
         if #args < 1 then 
@@ -120,8 +127,10 @@ function handle_trigger(channel, user, cmd, args)
             end
         end
         g = msg
+        if logfmt then g = "["..os.date(logfmt).."] "..g end
         if #found > 0 then
             for i,v in ipairs(found) do
+                print(v)
                 if v ~= g then
                     doMessage(channel, user..": "..v)
                 end
