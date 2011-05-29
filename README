@@ -1,4 +1,8 @@
-
+Dependencies:
+I use the following version of Lua and libraries:
+Lua 5.1
+LuaSocket  2.0.2
+LuaLanes 2.0.10
 
 CREDITS:
 Thanks to ToxicFrog on Freenode's IRC network for a ton of help adding multithreading support
