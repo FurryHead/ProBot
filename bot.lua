@@ -1,3 +1,10 @@
+new_env_items = {}
+for k,v in pairs(_G) do
+    if k ~= "new_env_items" then
+        new_env_items[k] = v
+    end
+end
+
 require("socket")
 require("socket.url")
 require("socket.http")
@@ -11,9 +18,9 @@ if not configured then
     error("You have not fully read the bot configuration file. (config.lua) Please read the file FULLY, then try starting the bot again.")
 end
 
-local running = true
+running = true
 
-local IRC_ACTIONS = {
+IRC_ACTIONS = {
     join = { },
     part = { },
     quit = { },
@@ -25,13 +32,13 @@ local IRC_ACTIONS = {
     triggers = { },
 }
 
-local plugins = {}
+plugins = {}
 
 package.path = package.path..";./plugins/?.lua"
 loadplugins()
 
 -- Create a socket, and connect
-local conn = assert(socket.tcp(), "Could not make a TCP socket.")
+conn = assert(socket.tcp(), "Could not make a TCP socket.")
 assert(conn:connect(IRC_HOST, IRC_PORT), "Failed to connect.")
 
 -- Register with the IRC server

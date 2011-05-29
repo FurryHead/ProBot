@@ -50,7 +50,19 @@ function loadplugin(name, _)
         print("Plugin "..pname.." is loading plugin "..name..".")
     end
     
-    local plugin_env = setmetatable({}, { __index = getfenv(0), __metatable = {} })
+    
+    local plugin_env = setmetatable({}, { __index = {}, __metatable = {} })
+    for k,v in pairs(new_env_items) do
+        plugin_env[k] = v
+    end
+    for k,v in pairs(_G) do
+        if k:match("^do") or k:match("^load") or k:match("^close") 
+        or k:match("^plugin") or k:match("^IRC_") or k == "owner"
+        or k == "pfmt" or k == "cmdPrefix" or k == "timestamp"
+        or k == "nickname" or k == "ident" then
+            plugin_env[k] = v
+        end
+    end
     local plugin_chunk,err = loadfile("./plugins/" .. name .. '.lua')
     if err then 
         print("Error loading plugin "..name.." - "..err)

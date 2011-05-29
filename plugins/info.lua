@@ -78,7 +78,7 @@ function handle_triggers(channel, user, cmd, args, info_silent)
                     doMessage(channel, user .. ": " .. k .. ": " .. v)
                     handled = true
                 else
-                    tlocal mp2 = string.gsub(tmp, "ves$", "fe")
+                    local tmp2 = string.gsub(tmp, "ves$", "fe")
                     local k,v = getInfo(tmp2)
                     if k and v then
                         doMessage(channel, user .. ": " .. k .. ": " .. v)
