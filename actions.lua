@@ -33,7 +33,7 @@ function doQuit(message)
         sendLine("QUIT")
     end
     sawQuit(nickname, message or "Client quit")
-    running = false
+    running = false 
 end
 
 function doNick(newnick)

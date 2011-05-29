@@ -147,7 +147,7 @@ function closeplugins()
             end
         end
         if value.cleanup then 
-            local a,err = pcall(value.cleanup) 
+            local a,err = pcall(value.cleanup)  
             if not a then
                 print("Error cleaning up plugin "..name.." - "..err)
                 errs = errs..err.." ---------- "

@@ -112,7 +112,7 @@ function main()
         end
         
         if words[2] == "NICK" then
-            -- Someone changed their nickname
+            -- Someone changed their nickname 
             sawNick(user, words[3]:sub(1))
         end
         

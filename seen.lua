@@ -80,7 +80,7 @@ function sawJoin(channel, user)
 end
 
 function sawPart(channel, user, message)
-    for _,handler in ipairs(IRC_ACTIONS.part) do
+    for _,handler in ipairs(IRC_ACTIONS.part) do 
         local a,err = pcall(handler, channel, user, message) 
         if not a then
             local plug = ""
